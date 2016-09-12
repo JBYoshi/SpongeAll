@@ -1,0 +1,10 @@
+/SpongeForge/
+/SpongeCommon/
+/SpongeVanilla/
+/gradlew
+/gradlew.bat
+/gradle/wrapper
+.gradle/
+.idea/
+.classpath
+.project

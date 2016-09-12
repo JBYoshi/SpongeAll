@@ -1,0 +1,4 @@
+// Bug fixes for merged SpongeForge/SpongeVanilla build.
+
+// SpongeForge: build.gradle references rootProject.tasks.shadowDevJar
+task('shadowDevJar').dependsOn { project('SpongeForge').tasks.shadowDevJar }

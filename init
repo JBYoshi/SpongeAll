@@ -1,0 +1,62 @@
+#!/bin/bash
+function nld {
+  [ -d $1 -a ! -L $1 ] && [ -n "$(ls $1)" ]
+}
+function maybemkdir {
+  if [ -L $1 ]; then rm $1; fi
+  if [ ! -d $1 ]; then mkdir $1; fi
+}
+if ( (nld SpongeForge/SpongeCommon && nld SpongeCommon) \
+  || (nld SpongeForge/SpongeCommon && nld SpongeVanilla/SpongeCommon) \
+  || (nld SpongeCommon && nld SpongeVanilla/SpongeCommon) )
+then
+  echo ERROR: Conflict between SpongeCommon clones.
+  echo "Please remove all but one of the following directories (this script will create symbolic links between them for you):"
+  if [ -d SpongeCommon ]; then echo - SpongeCommon; fi
+  if [ -d SpongeForge/SpongeCommon ]; then echo - SpongeForge/SpongeCommon; fi
+  if [ -d SpongeVanilla/SpongeCommon ]; then echo - SpongeVanilla/SpongeCommon; fi
+  exit 1
+fi
+
+if [ ! -d SpongeCommon ]
+then
+  if [ -d SpongeForge ]
+  then
+    mv SpongeForge/SpongeCommon SpongeCommon
+    ln -s ../SpongeCommon SpongeForge/SpongeCommon
+  elif [ -d SpongeVanilla ]
+  then
+    mv SpongeVanilla/SpongeCommon SpongeCommon
+    ln -s ../SpongeCommon SpongeVanilla/SpongeCommon
+  else
+    echo Please place a checkout of SpongeForge, SpongeVanilla, or SpongeCommon in the current directory.
+    exit 1
+  fi
+fi
+
+if [ ! -d SpongeForge ]
+then
+  git checkout https://github.com/SpongePowered/SpongeForge.git
+fi
+cd SpongeForge
+maybemkdir SpongeCommon
+git config --local submodule.SpongeCommon.path ../SpongeCommon
+cd ..
+
+if [ ! -d SpongeVanilla ]
+then
+  echo Cloning SpongeVanilla...
+  git checkout https://github.com/SpongePowered/SpongeVanilla.git
+fi
+cd SpongeVanilla
+maybemkdir SpongeCommon
+git config --local submodule.SpongeCommon.path ../SpongeCommon
+cd ..
+
+maybemkdir .git/scripts
+ln -sf init .git/scripts/post-checkout
+maybemkdir gradle
+ln -sf ../SpongeCommon/gradle/wrapper gradle/wrapper
+ln -sf SpongeCommon/gradlew gradlew
+ln -sf SpongeCommon/gradlew.bat gradlew.bat
+echo Initialized checkout of all Sponge repositories.

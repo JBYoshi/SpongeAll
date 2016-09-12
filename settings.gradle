@@ -1,0 +1,5 @@
+rootProject.name = 'Sponge'
+include 'SpongeForge'
+include 'SpongeVanilla'
+include 'SpongeCommon'
+include 'SpongeCommon:SpongeAPI'
