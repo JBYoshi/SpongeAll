@@ -1,8 +1,8 @@
-#!/bin/bash
-function nld {
+#!/bin/sh
+nld() {
   [ -d $1 -a ! -L $1 ] && [ -n "$(ls $1)" ]
 }
-function maybemkdir {
+maybemkdir() {
   if [ -L $1 ]; then rm $1; fi
   if [ ! -d $1 ]; then mkdir $1; fi
 }
