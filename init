@@ -59,4 +59,6 @@ maybemkdir gradle
 ln -sf ../SpongeCommon/gradle/wrapper gradle/wrapper
 ln -sf SpongeCommon/gradlew gradlew
 ln -sf SpongeCommon/gradlew.bat gradlew.bat
+
+cp -f gitmodules .gitmodules
 echo Initialized checkout of all Sponge repositories.

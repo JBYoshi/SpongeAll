@@ -1,0 +1,9 @@
+[submodule "SpongeCommon"]
+	path = SpongeCommon
+	url = ./SpongeCommon
+[submodule "SpongeForge"]
+	path = SpongeForge
+	url = ./SpongeForge
+[submodule "SpongeVanilla"]
+	path = SpongeVanilla
+	url = ./SpongeVanilla
