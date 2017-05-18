@@ -1,0 +1,2 @@
+#!/bin/sh
+GRADLE_OPTS=-Xmx2G ./gradlew --no-daemon setupDecompWorkspace
