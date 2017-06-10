@@ -2,3 +2,7 @@
 
 // SpongeForge: build.gradle references rootProject.tasks.shadowDevJar
 task('shadowDevJar').dependsOn { project('SpongeForge').tasks.shadowDevJar }
+
+if (file('gradle/local-build.gradle').exists()) {
+    apply from: file('gradle/local-build.gradle')
+}

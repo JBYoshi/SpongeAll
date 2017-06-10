@@ -3,3 +3,10 @@ include 'SpongeForge'
 include 'SpongeVanilla'
 include 'SpongeCommon'
 include 'SpongeCommon:SpongeAPI'
+if (file('SpongeVanilla/client.gradle').exists() && file('SpongeVanilla/client.gradle').text.contains("include 'client'") && !file
+        ('SpongeVanilla/client.gradle').text.contains("// include 'client'")) {
+    include 'SpongeVanilla:client'
+}
+if (file('gradle/local-settings.gradle').exists()) {
+    apply from: file('gradle/local-settings.gradle')
+}

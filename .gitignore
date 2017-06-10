@@ -3,8 +3,11 @@
 /SpongeVanilla/
 /gradlew
 /gradlew.bat
-/gradle/wrapper
+/gradle/
 .gradle/
 .idea/
+build/
+.gitmodules
 .classpath
 .project
+.settings/

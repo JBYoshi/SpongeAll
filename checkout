@@ -1,0 +1,94 @@
+#!/bin/sh -e
+get_spongepowered_remote() {
+  git remote -v | grep -E 'SpongePowered\/'`basename $(pwd)`'(\.git)? \(fetch\)' | awk -F"\t" '{print $1}'
+}
+
+checkout() {
+  if git rev-parse $1>/dev/null 2>/dev/null
+    then git checkout $1
+    else git checkout -b `get-spongepowered-remote`/$1 $1
+  fi
+}
+
+# $1 should be a pattern containing OUT
+# $2, if present, should be the smallest number
+get_largest_numbered_branch() {
+  x=
+  if [ ! -z $2 ]
+  then x=$(($2 + 1))
+  else x=1
+  fi
+
+  remote=`get_spongepowered_remote`
+  # Must pipe git branch through grep -e '.*'; git branch does not error when no branches match, but grep does.
+  while git branch --list -a $remote/`echo $1 | sed 's/OUT/'$x'/'` | grep -e '.*' > /dev/null
+  do x=$((x + 1))
+  done
+  echo $((x - 1))
+}
+
+help() {
+  echo "Usage:" > /dev/stderr
+  echo "  $0 b - Check out the latest bleeding version" > /dev/stderr
+  echo "  $0 s - Check out the latest stable version" > /dev/stderr
+  echo "  $0 <major API version> - Check out a specific stable version" > /dev/stderr
+  echo "    Example: $0 6" > /dev/stderr
+  echo "    Minimum supported version is 5" > /dev/stderr
+  exit 1
+}
+
+if [ $# -ne 1 ]
+then help
+elif [ $1 = b ]
+then
+  echo Fetching all repositories...
+  git submodule foreach --recursive git fetch --all --prune
+  echo
+  echo Checking out bleeding...
+  git submodule foreach --recursive git checkout bleeding
+elif [ $1 = s ] || [ $(($1)) -gt 4 ] # If it isn't a number, it will resolve to 0, and thus not be checked.
+then
+  echo Fetching all repositories...
+  git submodule foreach --recursive git fetch --all --prune
+  echo
+
+  cd SpongeCommon
+  major=$1
+  if [ $major = s ]
+  then
+    major=`get_largest_numbered_branch "stable-OUT" 5`
+    echo Will check out API version $major in all repositories.
+  elif [ $major -lt 5 ]
+  then
+    help
+  elif ! (git branch --list -a `get_spongepowered_remote`/stable-$major | grep -e '.*') > /dev/null
+  then
+    echo No such API version $major. If you want bleeding, use '"b"' instead. > /dev/stderr
+    exit 1
+  fi
+  echo Checking out SpongeCommon...
+  checkout stable-$major
+  cd ..
+  echo
+  echo Checking out SpongeForge...
+  cd SpongeForge
+  checkout stable-$major
+  cd ..
+  echo
+  echo Checking out SpongeVanilla...
+  cd SpongeVanilla
+  checkout stable-$major
+  cd ..
+  echo
+
+  cd SpongeCommon/SpongeAPI
+  minor=`get_largest_numbered_branch "stable-$major.OUT.0"`
+  patch=`get_largest_numbered_branch "stable-$major.$minor.OUT"`
+  echo Checking out SpongeAPI...
+  checkout stable-$major.$minor.$patch
+  cd ../..
+else help
+fi
+echo
+echo Pulling all repositories...
+git submodule foreach --recursive git pull
