@@ -7,6 +7,9 @@ if (file('SpongeVanilla/client.gradle').exists() && file('SpongeVanilla/client.g
         ('SpongeVanilla/client.gradle').text.contains("// include 'client'")) {
     include 'SpongeVanilla:client'
 }
+if (file('SpongeCommon/testplugins/build.gradle').exists()) {
+    include 'SpongeCommon:testplugins'
+}
 if (file('gradle/local-settings.gradle').exists()) {
     apply from: file('gradle/local-settings.gradle')
 }
