@@ -36,7 +36,7 @@ fi
 
 if [ ! -d SpongeForge ]
 then
-  git checkout https://github.com/SpongePowered/SpongeForge.git
+  git clone https://github.com/SpongePowered/SpongeForge.git
 fi
 cd SpongeForge
 maybemkdir SpongeCommon
@@ -46,7 +46,7 @@ cd ..
 if [ ! -d SpongeVanilla ]
 then
   echo Cloning SpongeVanilla...
-  git checkout https://github.com/SpongePowered/SpongeVanilla.git
+  git clone https://github.com/SpongePowered/SpongeVanilla.git
 fi
 cd SpongeVanilla
 maybemkdir SpongeCommon

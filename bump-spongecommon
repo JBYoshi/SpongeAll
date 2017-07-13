@@ -1,0 +1,17 @@
+#!/bin/sh
+if [ $# = 0 ]
+then
+  echo Please specify the commit message. "Bump SpongeCommon" is inserted at the start.
+  exit 1
+fi
+old_dir=`pwd`
+cd `dirname $0`
+cd SpongeForge
+git add SpongeCommon
+git commit -m "Bump SpongeCommon $*"
+git push
+cd ../SpongeVanilla
+git add SpongeCommon
+git commit -m "Bump SpongeCommon $*"
+git push
+cd $old_dir
