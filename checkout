@@ -6,7 +6,7 @@ get_spongepowered_remote() {
 checkout() {
   if git rev-parse $1>/dev/null 2>/dev/null
     then git checkout $1
-    else git checkout -b `get-spongepowered-remote`/$1 $1
+    else git checkout -b `get_spongepowered_remote`/$1 $1
   fi
 }
 
