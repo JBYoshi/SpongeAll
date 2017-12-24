@@ -1,17 +1,19 @@
 #!/bin/sh
+MESSAGE=
 if [ $# = 0 ]
 then
-  echo Please specify the commit message. "Bump SpongeCommon" is inserted at the start.
-  exit 1
+  MESSAGE="Bump SpongeCommon."
+else
+  MESSAGE="Bump SpongeCommon $*"
 fi
 old_dir=`pwd`
 cd `dirname $0`
 cd SpongeForge
 git add SpongeCommon
-git commit -m "Bump SpongeCommon $*"
+git commit -m "$MESSAGE"
 git push
 cd ../SpongeVanilla
 git add SpongeCommon
-git commit -m "Bump SpongeCommon $*"
+git commit -m "$MESSAGE"
 git push
 cd $old_dir
